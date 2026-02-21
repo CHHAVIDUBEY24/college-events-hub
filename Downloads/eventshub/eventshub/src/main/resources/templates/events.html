@@ -1,0 +1,39 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>All Events</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h2>All Events</h2>
+
+    <div th:if="${#lists.isEmpty(events)}">
+        <p>No events available.</p>
+    </div>
+
+    <div th:each="event : ${events}">
+        <hr>
+        <h3 th:text="${event.title}"></h3>
+        <p th:text="${event.description}"></p>
+        <p><strong>Date:</strong> <span th:text="${event.date}"></span></p>
+        <form th:action="@{/events/register/{id}(id=${event.id})}" method="post">
+            <button type="submit">Register</button>
+        </form>
+
+    </div>
+    <div sec:authorize="hasRole('USER')">
+        <form th:action="@{/events/register/{id}(id=${event.id})}" method="post">
+            <button type="submit">Register</button>
+        </form>
+    </div>
+
+    <br>
+    <a href="/dashboard">Back to Dashboard</a>
+</div>
+
+</body>
+</html>

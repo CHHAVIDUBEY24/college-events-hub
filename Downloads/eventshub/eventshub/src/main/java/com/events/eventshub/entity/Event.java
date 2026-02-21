@@ -1,9 +1,9 @@
 package com.events.eventshub.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Event {
@@ -15,6 +15,8 @@ public class Event {
     private String title;
     private String description;
     private String date;
+    @ManyToMany(mappedBy = "registeredEvents")
+    private List<User> users = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -47,5 +49,13 @@ public class Event {
     public void setDate(String date) {
         this.date = date;
     }
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
 }
 

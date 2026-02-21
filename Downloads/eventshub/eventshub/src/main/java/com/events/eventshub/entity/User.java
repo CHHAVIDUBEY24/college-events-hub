@@ -3,6 +3,9 @@ package com.events.eventshub.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 //@Data
 @NoArgsConstructor
@@ -27,6 +30,21 @@ public class User {
     private String department;
 
     private String skills;
+    @ManyToMany
+    @JoinTable(
+            name = "user_events",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "event_id")
+    )
+    private List<Event> registeredEvents = new ArrayList<>();
+    public List<Event> getRegisteredEvents() {
+        return registeredEvents;
+    }
+
+    public void setRegisteredEvents(List<Event> registeredEvents) {
+        this.registeredEvents = registeredEvents;
+    }
+
 
     public Long getId() {
         return id;
