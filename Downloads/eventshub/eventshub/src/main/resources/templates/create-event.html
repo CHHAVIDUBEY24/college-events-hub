@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Event</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
@@ -13,17 +15,17 @@
 
         <div class="form-group">
             <label>Title</label>
-            <input type="text" th:field="*{title}" required>
+            <input type="text" th:field="*{title}" title="Event title" required>
         </div>
 
         <div class="form-group">
             <label>Description</label>
-            <input type="text" th:field="*{description}" required>
+            <input type="text" th:field="*{description}" title="Event description" required>
         </div>
 
         <div class="form-group">
             <label>Date</label>
-            <input type="text" th:field="*{date}" required>
+            <input type="text" th:field="*{date}" title="Event date" required>
         </div>
 
         <button type="submit">Create</button>

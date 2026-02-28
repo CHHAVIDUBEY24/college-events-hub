@@ -4,7 +4,6 @@ import com.events.eventshub.entity.Event;
 import com.events.eventshub.entity.User;
 import com.events.eventshub.repository.EventRepository;
 import com.events.eventshub.repository.UserRepository;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +11,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.security.Principal;
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class EventController {
@@ -22,8 +26,20 @@ public class EventController {
     private UserRepository userRepository;
 
     @GetMapping("/events")
-    public String listEvents(Model model) {
-        model.addAttribute("events", eventRepository.findAll());
+    public String listEvents(@RequestParam Optional<String> dept,
+                             @RequestParam Optional<String> q,
+                             Model model) {
+        List<Event> events;
+        if (dept.isPresent()) {
+            events = eventRepository.findByDepartment(dept.get());
+        } else if (q.isPresent()) {
+            events = eventRepository.findByTitleContainingIgnoreCase(q.get());
+        } else {
+            events = eventRepository.findAll();
+        }
+        // only show approved events for non-admins
+        events.removeIf(e -> !e.isApproved());
+        model.addAttribute("events", events);
         return "events";
     }
 
@@ -35,14 +51,15 @@ public class EventController {
 
     @PostMapping("/admin/create-event")
     public String createEvent(@ModelAttribute Event event) {
+        event.setApproved(false);
         eventRepository.save(event);
         return "redirect:/dashboard";
     }
     @PostMapping("/events/register/{id}")
     public String registerForEvent(@PathVariable Long id,
-                                   Authentication authentication) {
+                                   Principal principal) {
 
-        String email = authentication.name();
+        String email = principal.getName();
 
         User user = userRepository.findByEmail(email).orElseThrow();
         Event event = eventRepository.findById(id).orElseThrow();

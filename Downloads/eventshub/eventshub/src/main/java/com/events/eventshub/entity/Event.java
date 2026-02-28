@@ -15,6 +15,9 @@ public class Event {
     private String title;
     private String description;
     private String date;
+    private String department;
+    private boolean approved = false;
+
     @ManyToMany(mappedBy = "registeredEvents")
     private List<User> users = new ArrayList<>();
 
@@ -55,6 +58,22 @@ public class Event {
 
     public void setUsers(List<User> users) {
         this.users = users;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
     }
 
 }
